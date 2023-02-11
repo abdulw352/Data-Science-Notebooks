@@ -1,0 +1,10 @@
+Selecting employees from a certain period
+
+SELECT  DATE_TRUNC(dates.datekey, 'month') as mt, COUNT(1)
+FROM employees cross join dates
+where dates.datekey >= employees.startdate 
+and (dates.datekey <= employees.enddate
+    OR
+    employees.enddate is NULL)
+group by DATE_TRUNC(dates.datekey, 'month')
+order by DATE_TRUNC(dates.datekey, 'month')
