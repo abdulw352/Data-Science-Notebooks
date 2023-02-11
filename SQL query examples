@@ -20,3 +20,18 @@ and (dates.datekey <= employees.enddate
 group by DATE_TRUNC(dates.datekey, 'month')
 order by DATE_TRUNC(dates.datekey, 'month')
 
+Employee count by end of date:
+
+With `d1` as 
+(SELECT DISTINCT
+    DATE_ADD(DATE_ADD(DATE_TRUNC(dates.datekey, "month"), 1, "month" ), -1, "day") eomonth
+FROM dates)
+
+SELECT d1.eomonth, COUNT(1)
+from employees cross join `d1` as d1
+where d1.eomonth >= employees.startdate
+and (d1.eomonth <= employees.enddate
+    OR
+    employees.enddate is NULL)
+group by d1.eomonth
+order by d1.eomonth
